@@ -18,8 +18,8 @@ n <- 1:100000
 df <- data.table(n) %>% .[, sample := list(lapply(n, function(x) rbinom(10, 1, 0.5)))] 
 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet
-df[, `:=` (relative_häufigkeit = unlist(lapply(.SD$sample, function(x) mean(x))),
-           häufigkeit = unlist(lapply(.SD$sample, function(x) sum(x))))]
+df[, `:=` (relative_häufigkeit = sapply(.SD$sample, function(x) mean(x)),
+           häufigkeit = sapply(.SD$sample, function(x) sum(x)))]
 
 # Histogramm der Verteilung
 df %>% ggplot(aes(x=relative_häufigkeit)) +
@@ -47,8 +47,8 @@ n <- 1:1000000
 
 df <- data.table(n) %>% .[, sample := list(lapply(n, function(x) rbinom(12, 1, 1/5)))]  #12 Fragen 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet
-df[, `:=` (relative_häufigkeit = unlist(lapply(.SD$sample, function(x) mean(x))),
-           häufigkeit = unlist(lapply(.SD$sample, function(x) sum(x))))]
+df[, `:=` (relative_häufigkeit = sapply(.SD$sample, function(x) mean(x)),
+           häufigkeit = sapply(.SD$sample, function(x) sum(x)))]
 
 # Histogramm der Verteilung
 # df %>% ggplot(aes(x=relative_häufigkeit)) +
