@@ -1,3 +1,5 @@
+rm(list=ls())
+
 library(magrittr)
 library(data.table)
 library(ggplot2)
@@ -11,7 +13,7 @@ set.seed(2323)
 # Kopf = 1
 # Zahl = 0
 
-n <- 1:1000000
+n <- 1:100000
 # es werden 10 Mal eine Münze mit den zwei Möglichkeiten Kopf oder Zahl geworfen
 df <- data.table(n) %>% .[, sample := list(lapply(n, function(x) rbinom(10, 1, 0.5)))] 
 
@@ -39,7 +41,7 @@ df[, .N, by = .(häufigkeit, relative_häufigkeit)][order(-N)]
 # Find the probability of having four or less correct answers if a student attempts to answer every question at random.
 
 df <- NULL
-
+n <- 1:1000000
 # Richtige Antwort = 1
 # Falsche Antwort = 0
 
