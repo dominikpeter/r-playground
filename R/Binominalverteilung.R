@@ -4,7 +4,6 @@ library(data.table)
 set.seed(2323)
 
 
-
 # Simulation von 100000 Versuchen
 # -------------------------------------------------------------------------------------------------------------------
 
@@ -25,4 +24,4 @@ df$relative_häufigkeit %>% hist
 # Anzahl relative und absolute Häufigkeit
 df[, .N, by = .(häufigkeit, relative_häufigkeit)][order(-N)]
 
-# 101 wird kein Kopf geworfen und 96 wird nur Kopf geworfen, wobei 24519mal 5 Mal Kopf und 5 Mal Zahl geforfen wird
+# 101 wird kein Kopf geworfen und 96 wird nur Kopf geworfen, wobei 24519mal 5 Mal Kopf und 5 Mal Zahl geworfen wird
