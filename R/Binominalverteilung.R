@@ -1,5 +1,6 @@
 library(magrittr)
 library(data.table)
+library(ggplot2)
 
 set.seed(2323)
 
@@ -19,7 +20,11 @@ df[, `:=` (relative_häufigkeit = unlist(lapply(.SD$sample, function(x) mean(x))
            häufigkeit = unlist(lapply(.SD$sample, function(x) sum(x))))]
 
 # Histogramm der Verteilung
-df$relative_häufigkeit %>% hist(main ="Histogramm der relativen Häufigkeiten")
+df %>% ggplot(aes(x=relative_häufigkeit)) +
+  geom_histogram(binwidth = 0.1, color = "white") +
+  ggtitle("Histogramm der relativen Häufigkeiten") +
+
+
 
 # Anzahl relative und absolute Häufigkeit
 df[, .N, by = .(häufigkeit, relative_häufigkeit)][order(-N)]
