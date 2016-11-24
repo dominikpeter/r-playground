@@ -21,8 +21,8 @@ df[, `:=` (relative_häufigkeit = unlist(lapply(.SD$sample, function(x) mean(x))
 
 # Histogramm der Verteilung
 df %>% ggplot(aes(x=relative_häufigkeit)) +
-  geom_histogram(binwidth = 0.1, color = "white") +
-  ggtitle("Histogramm der relativen Häufigkeiten") +
+  geom_histogram(binwidth = 0.1, color = "white", fill = "#2980b9", alpha = 4/5) +
+  ggtitle("Histogramm der relativen Häufigkeiten")
 
 
 # Anzahl relative und absolute Häufigkeit
