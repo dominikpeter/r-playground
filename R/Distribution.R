@@ -1,9 +1,9 @@
 library(magrittr)
+library(data.table)
 
 set.seed(2323)
 
 
-library(data.table)
 
 # Simulation von 100000 Versuchen
 # -------------------------------------------------------------------------------------------------------------------
