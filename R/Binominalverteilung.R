@@ -25,7 +25,6 @@ df %>% ggplot(aes(x=relative_häufigkeit)) +
   ggtitle("Histogramm der relativen Häufigkeiten") +
 
 
-
 # Anzahl relative und absolute Häufigkeit
 df[, .N, by = .(häufigkeit, relative_häufigkeit)][order(-N)]
 
