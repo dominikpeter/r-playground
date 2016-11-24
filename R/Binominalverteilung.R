@@ -63,6 +63,6 @@ verteilung <- df[, .N, by = .(häufigkeit, relative_häufigkeit)][order(-N)]
 
 verteilung[häufigkeit == 4, N] / sum(verteilung[, N])
 
-# Lösungsansatz während des Unterrichts / gleiche Lösung bei vielen Versuchen!
+# Lösungsansatz während des Unterrichts / gleiche Lösung bzw. Ähnliche Lösung bei vielen Versuchen!
 dbinom(4, size=12, prob=0.2) 
 
