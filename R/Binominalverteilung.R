@@ -15,7 +15,7 @@ set.seed(2323)
 
 n <- 1:100000
 # es werden 10 Mal eine Münze mit den zwei Möglichkeiten Kopf oder Zahl geworfen
-df <- data.table(n) %>% .[, sample := list(lapply(n, function(x) rbinom(10, 1, 0.5)))] 
+df <- data.table(n) %>% .[, sample := .(lapply(n, function(x) rbinom(10, 1, 0.5)))] 
 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet
 df[, `:=` (relative_häufigkeit = sapply(.SD$sample, mean),
@@ -48,7 +48,7 @@ n <- 1:1000000
 # Richtige Antwort = 1
 # Falsche Antwort = 0
 
-df <- data.table(n) %>% .[, sample := list(lapply(n, function(x) rbinom(12, 1, 1/5)))]  #12 Fragen 
+df <- data.table(n) %>% .[, sample := .(lapply(n, function(x) rbinom(12, 1, 1/5)))]  #12 Fragen 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet
 df[, `:=` (relative_häufigkeit = sapply(.SD$sample, mean),
            häufigkeit = sapply(.SD$sample, sum))]
