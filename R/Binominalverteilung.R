@@ -18,13 +18,16 @@ n <- 1:100000
 df <- data.table(n) %>% .[, sample := list(lapply(n, function(x) rbinom(10, 1, 0.5)))] 
 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet
-df[, `:=` (relative_häufigkeit = sapply(.SD$sample, function(x) mean(x)),
-           häufigkeit = sapply(.SD$sample, function(x) sum(x)))]
+df[, `:=` (relative_häufigkeit = sapply(.SD$sample, mean),
+           häufigkeit = sapply(.SD$sample, sum))]
 
 # Histogramm der Verteilung
-df %>% ggplot(aes(x=relative_häufigkeit)) +
-  geom_histogram(binwidth = 0.1, color = "white", fill = "#2980b9", alpha = 4/5) +
-  ggtitle("Histogramm der relativen Häufigkeiten")
+df %>% ggplot(aes(x=häufigkeit)) +
+  geom_bar(aes(y = (..count..)/sum(..count..))) +
+  ggtitle("Binominalverteilung") +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("P(X = k)") + xlab("k")
+  
 
 
 # Anzahl relative und absolute Häufigkeit
@@ -47,13 +50,8 @@ n <- 1:1000000
 
 df <- data.table(n) %>% .[, sample := list(lapply(n, function(x) rbinom(12, 1, 1/5)))]  #12 Fragen 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet
-df[, `:=` (relative_häufigkeit = sapply(.SD$sample, function(x) mean(x)),
-           häufigkeit = sapply(.SD$sample, function(x) sum(x)))]
-
-# Histogramm der Verteilung
-# df %>% ggplot(aes(x=relative_häufigkeit)) +
-#   geom_histogram(binwidth = 0.1, color = "white", fill = "#2980b9", alpha = 4/5) +
-#   ggtitle("Histogramm der relativen Häufigkeiten")
+df[, `:=` (relative_häufigkeit = sapply(.SD$sample, mean),
+           häufigkeit = sapply(.SD$sample, sum))]
 
 
 # Anzahl relative und absolute Häufigkeit
