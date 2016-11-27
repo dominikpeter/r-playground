@@ -21,13 +21,18 @@ set.seed(2323)
 
 n <- 10000000
 
-df <- rpois(n, 12) %>% data.table(value = .)
+df <- data.table(value = rpois(n, 12))
 
+df[, `:=` (mittelwert = mean(value)),
+           standardabweichung = mean(value))]
+
+
+nbr <- nclass.Sturges(df$value)
 
 # Histogramm der Verteilung
 df %>% ggplot(aes(x=value)) +
-  geom_histogram(fill = '#2574A9', color = "white", alpha = 2/3, bins = 35) +
-  ggtitle("Binominalverteilung")
+  geom_histogram(fill = '#2574A9', color = "white", alpha = 2/3, bins = nbr) +
+  ggtitle("Poissonverteilung")
 
 
 
