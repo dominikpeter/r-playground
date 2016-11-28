@@ -1,3 +1,8 @@
+
+# -------------------------------------------------------------------------------------------------------------------
+# Binominalverteilung
+# -------------------------------------------------------------------------------------------------------------------
+
 rm(list=ls())
 
 library(magrittr)
@@ -70,4 +75,13 @@ verteilung[häufigkeit == 4, N] / sum(verteilung[, N])
 
 # Lösungsansatz während des Unterrichts / gleiche Lösung bzw. Ähnliche Lösung bei vielen Versuchen!
 dbinom(4, size=12, prob=0.2) 
+
+
+
+sum(verteilung[häufigkeit <= 4, N]) / sum(verteilung[, N])
+
+pbinom(4, size=12, prob=0.2) 
+
+
+
 
