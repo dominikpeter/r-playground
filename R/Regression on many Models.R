@@ -9,10 +9,9 @@ if(!require(broom)) install.packages(broom)
 if(!require(ggplot2)) install.packages(ggplot2)
 
 
-by_group <- gapminder %>% 
-  as.data.table %>% 
-  .[, .(data = .(.SD)), by = .(country, continent)]
+df <- gapminder %>% as.data.table 
 
+by_group <- df[, .(data = .(.SD)), by = .(continent, country)]
 
 reg <- function(df) {
   lm(gdpPercap ~ year, df)
@@ -26,9 +25,12 @@ by_group[, model := lapply(data, reg)]
 by_group[, tidy := lapply(model, broom::tidy)]
 by_group[, slope := vapply(tidy, get_slope, double(1))]
 
-by_group[slope > quantile(slope,0.01)] %>%
-  ggplot(aes(x=continent, y = slope)) +
-  geom_boxplot()
+
+by_group[slope > quantile(slope, 0.01)] %>% 
+  ggplot(aes(y=slope, x=continent)) +
+  geom_boxplot(fill="#16a085", alpha = 3/5)
+
+
 
 
 
