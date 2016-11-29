@@ -17,9 +17,6 @@ reg <- function(df) {
   lm(gdpPercap ~ year, df)
 }
 
-get_slope <- function(df) {
-  df$estimate[2]
-}
 
 by_group %>% 
   .[, model := lapply(data, reg)] %>%
