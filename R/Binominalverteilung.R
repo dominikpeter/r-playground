@@ -27,8 +27,8 @@ df <- data.table(n) %>% .[, sample := .(lapply(n, roll))]
 
 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet
-df[, `:=` (relative_häufigkeit = sapply(.SD$sample, mean),
-           häufigkeit = sapply(.SD$sample, sum))]
+df[, `:=` (relative_häufigkeit = sapply(sample, mean),
+           häufigkeit = sapply(sample, sum))]
 
 # Histogramm der Verteilung
 df %>% ggplot(aes(x=häufigkeit)) +
@@ -61,8 +61,8 @@ take_exam <- function(x) rbinom(12, 1, 1/5)
 
 df <- data.table(n) %>% .[, sample := .(lapply(n, take_exam))]  #12 Fragen 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet
-df[, `:=` (relative_häufigkeit = sapply(.SD$sample, mean),
-           häufigkeit = sapply(.SD$sample, sum))]
+df[, `:=` (relative_häufigkeit = sapply(sample, mean),
+           häufigkeit = sapply(sample, sum))]
 
 
 df %>% ggplot(aes(x=häufigkeit)) +
