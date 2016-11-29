@@ -65,6 +65,7 @@ df[, `:=` (relative_häufigkeit = vapply(sample, mean, double(1)),
            häufigkeit = vapply(sample, sum, double(1)))]
 
 
+
 df %>% ggplot(aes(x=häufigkeit)) +
   geom_bar(aes(y = (..count..)/sum(..count..)), fill = '#2574A9', alpha = 2/3) +
   ggtitle("Binominalverteilung") +
