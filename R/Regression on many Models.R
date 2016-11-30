@@ -17,7 +17,7 @@ reg <- function(df) {
   lm(gdpPercap ~ year, df)
 }
 
-
+# model by group
 by_group %>% 
   .[, model := lapply(data, reg)] %>%
   .[, tidy := lapply(model, broom::tidy)] %>% 
@@ -25,12 +25,12 @@ by_group %>%
   .[, slope := vapply(tidy, `[`, double(1), 2, 2)] %>% 
   .[, r.squared := vapply(glance, `[[`, double(1), "r.squared")]
 
-
+# plot slope by continent
 by_group[slope > quantile(slope, 0.01) & continent != "Oceania"] %>% 
   ggplot(aes(y=slope, x=continent)) +
   geom_boxplot(fill="#16a085", alpha = 3/5)
 
-
+# plot r.squared by contnent
 by_group[r.squared > quantile(r.squared, 0.01) & continent != "Oceania"] %>% 
   ggplot(aes(y=r.squared, x=continent)) +
   geom_boxplot(fill="#16a085", alpha = 3/5)
