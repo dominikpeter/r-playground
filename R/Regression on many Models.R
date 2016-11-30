@@ -7,7 +7,7 @@ if(!require(gapminder)) install.packages(gapminder)
 if(!require(magrittr)) install.packages(magrittr)
 if(!require(broom)) install.packages(broom)
 if(!require(ggplot2)) install.packages(ggplot2)
-
+if(!require(data.table)) install.packages(data.table)
 
 df <- gapminder %>% as.data.table 
 
