@@ -35,10 +35,20 @@ by_group[r.squared > quantile(r.squared, 0.01) & continent != "Oceania"] %>%
   ggplot(aes(y=r.squared, x=continent)) +
   geom_boxplot(fill="#16a085", alpha = 3/5)
 
+by_group %>% setorder(slope)
+by_group
 
 
+df <- tidyr::unnest(by_group[, .(continent, country, data, slope, r.squared)])
 
+# test of selfmade unnest
+# ------------------------------------------------------------------------------------------------
+unn <- function(dt, orig){
+  ll <- eval(substitute(orig), dt)
+  vapply(ll, NROW, numeric(1))
+}
 
-
+by_group[, rep(.SD, )]
+unn(by_group, data)
 
 
