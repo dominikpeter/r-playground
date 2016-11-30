@@ -23,7 +23,8 @@ n <- 1:100000
 roll <- function(x) sample(c(0, 1), 10, replace = TRUE) #sample mit replacement
 
 # es werden 10 Mal eine Münze mit den zwei Möglichkeiten Kopf oder Zahl geworfen
-df <- data.table(n) %>% .[, sample := .(lapply(n, roll))] 
+df <- data.table(n) %>%
+  .[, sample := .(lapply(n, roll))] 
 
 
 # für jeden Versuch wird die relative Häufigkeit von Kopf berechnet

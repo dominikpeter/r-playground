@@ -7,7 +7,7 @@ if(!require(gapminder)) install.packages(gapminder)
 if(!require(magrittr)) install.packages(magrittr)
 if(!require(broom)) install.packages(broom)
 if(!require(ggplot2)) install.packages(ggplot2)
-
+if(!require(data.table)) install.packages(data.table)
 
 df <- gapminder %>% as.data.table 
 
@@ -34,6 +34,9 @@ by_group[slope > quantile(slope, 0.01) & continent != "Oceania"] %>%
 by_group[r.squared > quantile(r.squared, 0.01) & continent != "Oceania"] %>% 
   ggplot(aes(y=r.squared, x=continent)) +
   geom_boxplot(fill="#16a085", alpha = 3/5)
+
+
+
 
 
 
