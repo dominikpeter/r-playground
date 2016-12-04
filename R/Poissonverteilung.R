@@ -62,8 +62,26 @@ dpois(20, lambda = 12)
 
 
 
+# Übung
+# -------------------------------------------------------------------------------------------------------------------
 
 
+pois <- dpois(1:30, lambda = 12)
+
+dt <- pois %>%
+  data.table(x=1:length(pois), y=.)
+
+
+dt %>% 
+  ggplot(aes(x=x, y=y)) +
+  stat_sum(geom="bar", fill = color, alpha = 4/5) +
+  scale_x_continuous(breaks = seq(1,30, by = 1))
+
+dpois(90, lambda = 90)
+dpois(89, lambda = 90)
+
+
+# wie viel Zeit vergeht
 
 
 
