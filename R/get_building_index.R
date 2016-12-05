@@ -8,10 +8,10 @@ library(rvest)
 library(ggplot2)
 library(httr)
 
+
 set_config( config( ssl_verifypeer = 0L ))
 url <- "https://www.kof.ethz.ch/en/forecasts-and-indicators/indicators/kof-baublatt-indicator.html"
 
-# get url
 
 url_excel <- httr::GET(url) %>%
   read_html() %>% 
@@ -60,7 +60,7 @@ tidy_df <- df %>%
   melt(id.vars = 1:4)
 
 
-tidy_df[Jahr > year(Sys.Date())-5] %>% 
+tidy_df[Jahr > year(Sys.Date())-3] %>% 
   ggplot(aes(x = Quartal, y = value, color = variable, group = variable)) +
   geom_point(size = 2) +
   geom_line(size= 1) +
