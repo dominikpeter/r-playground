@@ -34,15 +34,12 @@ df <- list(i = 1:12,
   as.data.table() %>% 
   merge(x = df, y =  ., by = "Month")
 
-df[, `:=` (Quartal = paste0(Year,' Q', Quarter),
-           Index = as.character((as.numeric(Year)*10) + Quarter),
+df[, `:=` (Quartal = as.yearqtr(paste(Year, Quarter, sep = '-')),
            Wohnbauindikator = as.numeric(Wohnbauindikator_CHF_nominal_saisonbereinigt),
            Gesamtbauindikator = as.numeric(Gesamtbauindikator_CHF_nominal_saisonbereinigt))]
 
-df <- df[, .(Index,
-             Jahr = Year,
+df <- df[, .(Jahr = Year,
              Quartal,
-             Index,
              Wohnbauindikator,
              Gesamtbauindikator)]
 
@@ -57,20 +54,20 @@ sd <- sd(df$Wohnbauindikator, df$Gesamtbauindikator)
 breaks <- seq(0, mx + (sd/2), by = floor(sd/200)*200)
 
 tidy_df <- df %>% 
-  melt(id.vars = 1:4)
+  melt(id.vars = 1:2)
 
-
-tidy_df[Jahr > year(Sys.Date())-5] %>% 
-  ggplot(aes(x = Quartal, y = value, color = variable, group = variable)) +
+tidy_df %>% 
+  ggplot(aes(x = Quartal, y = value, color = variable)) +
   geom_point(size = 2) +
   geom_line(size= 1) +
   ylab("") +
   scale_color_manual(values = c("#2980B9", "#27AE60"), name = "") +
-  scale_y_continuous(limits = c(0, mx + (sd/2))) +
+  scale_x_yearqtr(breaks = seq(min(tidy_df$Quartal), max(tidy_df$Quartal),by = .75),
+                  format = "%YQ%q") +
   ggtitle("KOF Baublatt Indicator") +
   theme(panel.background = element_rect(fill = "#F0F1F5"),
         panel.grid.major = element_line(color = "white", size = 4/5),
-        panel.grid.minor = element_line(color = "white", size = 4/5),
+        panel.grid.minor = element_blank(),
         axis.text.x=element_text(angle=45, hjust=1))
 
 
