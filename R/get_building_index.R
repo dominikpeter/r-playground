@@ -68,4 +68,6 @@ tidy_df[Jahr > year(Sys.Date())-19] %>%
         panel.grid.minor = element_blank()) 
 
 
+x <- stl(AirPassengers, s.window = "periodic")
+
 
