@@ -20,10 +20,10 @@ url_excel <- httr::GET(url) %>%
 
 path <- getwd()
 excel_path <- paste0(path, "/data/excel/index.xlsx")
-excel_path
 download.file(url_excel, excel_path, mode = "wb")
 
-df <- read.xlsx(excel_path) %>% as.data.table()
+df <- read.xlsx(excel_path) %>%
+  as.data.table()
 
 df[, `:=` (Year = str_extract(Quartal, "[0-9]+"),
            Month = str_extract(Quartal, "[A-z]+"))]
@@ -60,7 +60,7 @@ tidy_df <- df %>%
   melt(id.vars = 1:4)
 
 
-tidy_df[Jahr > year(Sys.Date())-3] %>% 
+tidy_df[Jahr > year(Sys.Date())-5] %>% 
   ggplot(aes(x = Quartal, y = value, color = variable, group = variable)) +
   geom_point(size = 2) +
   geom_line(size= 1) +
@@ -73,7 +73,5 @@ tidy_df[Jahr > year(Sys.Date())-3] %>%
         panel.grid.minor = element_line(color = "white", size = 4/5),
         axis.text.x=element_text(angle=45, hjust=1))
 
-
-x <- stl(AirPassengers, s.window = "periodic")
 
 
