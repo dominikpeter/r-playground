@@ -58,11 +58,11 @@ tidy_df[Jahr > year(Sys.Date())-19] %>%
   ggplot(aes(x = Quartal, y = value, color = variable)) +
   geom_point(alpha = .7) +
   geom_smooth() +
-  scale_x_yearqtr(n = 20) +
+  scale_x_yearqtr() +
   ylab("") +
   scale_colour_manual(values = c("#2980B9", "#27AE60"), name = "") +
   scale_y_continuous(limits = c(0, mx + (sd/2)), breaks = breaks) +
-  ggtitle("KOF Baublatt Indicator")
+  ggtitle("KOF Baublatt Indicator") +
   theme(panel.background = element_rect(fill = "#F0F1F5"),
         panel.grid.major = element_line(color = "white", size = 4/5),
         panel.grid.minor = element_blank()) 
