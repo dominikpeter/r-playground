@@ -66,7 +66,6 @@ df[, `:=` (relative_häufigkeit = vapply(sample, mean, double(1)),
            häufigkeit = vapply(sample, sum, double(1)))]
 
 
-
 df %>% ggplot(aes(x=häufigkeit)) +
   geom_bar(aes(y = (..count..)/sum(..count..)), fill = '#2574A9', alpha = 2/3) +
   ggtitle("Binominalverteilung") +
@@ -84,7 +83,6 @@ verteilung[häufigkeit == 4, N] / sum(verteilung[, N])
 
 # Lösungsansatz während des Unterrichts / gleiche Lösung bzw. Ähnliche Lösung bei vielen Versuchen!
 dbinom(4, size=12, prob=0.2) 
-
 
 
 sum(verteilung[häufigkeit <= 4, N]) / sum(verteilung[, N])
