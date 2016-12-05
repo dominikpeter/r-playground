@@ -6,18 +6,22 @@ library(data.table)
 library(stringr)
 library(rvest)
 library(ggplot2)
+library(httr)
 
 
-# get url
+set_config( config( ssl_verifypeer = 0L ))
 url <- "https://www.kof.ethz.ch/en/forecasts-and-indicators/indicators/kof-baublatt-indicator.html"
-url_excel <- read_html(url) %>%
+
+
+url_excel <- httr::GET(url) %>%
+  read_html() %>% 
   html_node(xpath = '//*[@id="contentContainer"]/aside/div/div[1]/div/div[4]/div/div/p/a') %>% 
   html_attr("href")
 
 path <- getwd()
 excel_path <- paste0(path, "/data/excel/index.xlsx")
-
-download.file(url_excel, excel_path)
+excel_path
+download.file(url_excel, excel_path, mode = "wb")
 
 df <- read.xlsx(excel_path) %>% as.data.table()
 
@@ -30,7 +34,7 @@ df <- list(i = 1:12,
   as.data.table() %>% 
   merge(x = df, y =  ., by = "Month")
 
-df[, `:=` (Quartal = as.yearqtr(paste(Year, Quarter, sep = "-")),
+df[, `:=` (Quartal = paste0(Year,' Q', Quarter),
            Index = as.character((as.numeric(Year)*10) + Quarter),
            Wohnbauindikator = as.numeric(Wohnbauindikator_CHF_nominal_saisonbereinigt),
            Gesamtbauindikator = as.numeric(Gesamtbauindikator_CHF_nominal_saisonbereinigt))]
@@ -41,6 +45,7 @@ df <- df[, .(Index,
              Index,
              Wohnbauindikator,
              Gesamtbauindikator)]
+
 
 df %>% setorder(Index)
 
@@ -54,18 +59,19 @@ breaks <- seq(0, mx + (sd/2), by = floor(sd/200)*200)
 tidy_df <- df %>% 
   melt(id.vars = 1:4)
 
-tidy_df[Jahr > year(Sys.Date())-19] %>% 
-  ggplot(aes(x = Quartal, y = value, color = variable)) +
-  geom_point(alpha = .7) +
-  geom_smooth() +
-  scale_x_yearqtr(n = 20) +
+
+tidy_df[Jahr > year(Sys.Date())-3] %>% 
+  ggplot(aes(x = Quartal, y = value, color = variable, group = variable)) +
+  geom_point(size = 2) +
+  geom_line(size= 1) +
   ylab("") +
-  scale_colour_manual(values = c("#2980B9", "#27AE60"), name = "") +
-  scale_y_continuous(limits = c(0, mx + (sd/2)), breaks = breaks) +
-  ggtitle("KOF Baublatt Indicator")
+  scale_color_manual(values = c("#2980B9", "#27AE60"), name = "") +
+  scale_y_continuous(limits = c(0, mx + (sd/2))) +
+  ggtitle("KOF Baublatt Indicator") +
   theme(panel.background = element_rect(fill = "#F0F1F5"),
         panel.grid.major = element_line(color = "white", size = 4/5),
-        panel.grid.minor = element_blank()) 
+        panel.grid.minor = element_line(color = "white", size = 4/5),
+        axis.text.x=element_text(angle=45, hjust=1))
 
 
 x <- stl(AirPassengers, s.window = "periodic")
