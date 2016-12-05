@@ -8,6 +8,7 @@ library(rvest)
 library(ggplot2)
 library(httr)
 
+current <- as.yearqtr(Sys.Date())
 
 set_config( config( ssl_verifypeer = 0L ))
 url <- "https://www.kof.ethz.ch/en/forecasts-and-indicators/indicators/kof-baublatt-indicator.html"
