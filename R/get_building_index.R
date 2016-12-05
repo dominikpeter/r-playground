@@ -56,13 +56,15 @@ breaks <- seq(0, mx + (sd/2), by = floor(sd/200)*200)
 tidy_df <- df %>% 
   melt(id.vars = 1:2)
 
-tidy_df %>% 
+plot_df <- tidy_df[Jahr > year(Sys.Date())-6]
+
+plot_df %>% 
   ggplot(aes(x = Quartal, y = value, color = variable)) +
   geom_point(size = 2) +
   geom_line(size= 1) +
   ylab("") +
   scale_color_manual(values = c("#2980B9", "#27AE60"), name = "") +
-  scale_x_yearqtr(breaks = seq(min(tidy_df$Quartal), max(tidy_df$Quartal),by = .75),
+  scale_x_yearqtr(breaks = seq(min(plot_df$Quartal), max(plot_df$Quartal),by = .25),
                   format = "%YQ%q") +
   ggtitle("KOF Baublatt Indicator") +
   theme(panel.background = element_rect(fill = "#F0F1F5"),
