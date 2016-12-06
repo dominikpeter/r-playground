@@ -18,12 +18,12 @@ reg <- function(df) {
 }
 
 # model by group
-by_group %>% 
-  .[, model := lapply(data, reg)] %>%
-  .[, tidy := lapply(model, broom::tidy)] %>% 
-  .[, glance := lapply(model, broom::glance)] %>% 
-  .[, slope := vapply(tidy, `[`, double(1), 2, 2)] %>% 
-  .[, r.squared := vapply(glance, `[[`, double(1), "r.squared")]
+by_group[, model := lapply(data, reg)]
+by_group[, `:=` (tidy = lapply(model, broom::tidy),
+                 glance = lapply(model, broom::glance))]
+
+by_group[, slope := vapply(tidy, `[`, double(1), 2, 2)]
+by_group[, r.squared := vapply(glance, `[[`, double(1), "r.squared")]
 
 # plot slope by continent
 by_group[slope > quantile(slope, 0.01) & continent != "Oceania"] %>% 
@@ -35,9 +35,6 @@ by_group[r.squared > quantile(r.squared, 0.01) & continent != "Oceania"] %>%
   ggplot(aes(y=r.squared, x=continent)) +
   geom_boxplot(fill="#16a085", alpha = 3/5)
 
-by_group %>% setorder(slope)
-by_group
-
 
 df <- tidyr::unnest(by_group[, .(continent, country, data, slope, r.squared)])
 
@@ -48,7 +45,6 @@ unn <- function(dt, orig){
   vapply(ll, NROW, numeric(1))
 }
 
-by_group[, rep(.SD, )]
-unn(by_group, data)
+
 
 
