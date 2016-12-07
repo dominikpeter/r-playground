@@ -1,7 +1,3 @@
-
-# -------------------------------------------------------------------------------------------------------------------
-# Regression on many models
-# -------------------------------------------------------------------------------------------------------------------
 rm(list=ls())
 if(!require(gapminder)) install.packages(gapminder)
 if(!require(magrittr)) install.packages(magrittr)
@@ -9,21 +5,40 @@ if(!require(broom)) install.packages(broom)
 if(!require(ggplot2)) install.packages(ggplot2)
 if(!require(data.table)) install.packages(data.table)
 
-df <- gapminder %>% as.data.table 
+library(snow)
+cl <- makeCluster(6)
 
-by_group <- df[, .(data = .(.SD)), by = .(continent, country)]
+# -------------------------------------------------------------------------------------------------------------------
+# Regression on many models
+# -------------------------------------------------------------------------------------------------------------------
+df <- gapminder %>% as.data.table
+
+df <- rbindlist(rep(list(df), 10000)) #get some bigger data to test
+
 
 reg <- function(df) {
   lm(gdpPercap ~ year, df)
 }
 
+
+by_group <- df[, .(data = .(.SD)), by = .(continent, country)]
+
+
 # model by group
 by_group[, model := lapply(data, reg)]
-by_group[, `:=` (tidy = lapply(model, broom::tidy),
-                 glance = lapply(model, broom::glance))]
+by_group[, `:=` (tidy = lapply(model, tidy),
+                 glance = lapply(model, glance))]
+by_group[, `:=` (slope = vapply(tidy, `[`, double(1), 2, 2),
+                 r.squared = vapply(glance, `[[`, double(1), "r.squared"))]
 
-by_group[, slope := vapply(tidy, `[`, double(1), 2, 2)]
-by_group[, r.squared := vapply(glance, `[[`, double(1), "r.squared")]
+# in parallel
+# ----------------------------------------------------------------------------
+# by_group[, model := parLapply(cl, data, reg)]
+# by_group[, `:=` (tidy = parLapply(cl, model, broom::tidy),
+#                  glance = parLapply(cl, model, broom::glance))]
+# by_group[, `:=` (slope = parSapply(cl, tidy, `[`, 2, 2),
+#                  r.squared = parSapply(cl, glance, `[[`, "r.squared"))]
+
 
 
 # plot slope by continent
@@ -38,13 +53,6 @@ by_group[r.squared > quantile(r.squared, 0.01) & continent != "Oceania"] %>%
 
 
 df <- tidyr::unnest(by_group[, .(continent, country, data, slope, r.squared)])
-
-# test of selfmade unnest
-# ------------------------------------------------------------------------------------------------
-unn <- function(dt, orig){
-  ll <- eval(substitute(orig), dt)
-  vapply(ll, NROW, numeric(1))
-}
 
 
 
