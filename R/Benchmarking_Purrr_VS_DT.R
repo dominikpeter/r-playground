@@ -22,7 +22,7 @@ library(microbenchmark)
 df <- gapminder %>% as.data.table
 
 big_df <- rbindlist(rep(list(df), 10000)) # get some bigger data to test
-?nest
+
 
 reg <- function(df) {
   lm(gdpPercap ~ year, df)
