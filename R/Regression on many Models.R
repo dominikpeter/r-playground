@@ -13,7 +13,7 @@ cl <- makeCluster(6)
 # -------------------------------------------------------------------------------------------------------------------
 df <- gapminder %>% as.data.table
 
-df <- rbindlist(rep(list(df), 100)) #get some bigger data to test
+df <- rbindlist(rep(list(df), 1000)) #get some bigger data to test
 
 
 reg <- function(df) {
@@ -54,9 +54,10 @@ by_group[r.squared > quantile(r.squared, 0.01) & continent != "Oceania"] %>%
 
 df <- tidyr::unnest(by_group[, .(continent, country, data, slope, r.squared)])
 
+by_group[, idx := 1:ncol(df)]
+by_group %>% setkey(idx)
 
-by_group[, idx := 1:nrow(by_group)]
+unnest <- by_group[rbindlist(by_group$data)]
 
-setkey(by_group, idx)
-unnested <- merge(by_group, rbindlist(by_group$data, idcol = "idx"))
+
 
