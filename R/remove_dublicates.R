@@ -8,7 +8,7 @@ x <- bind_rows(list(x, x))
 x <- x %>%
   group_by(country, continent, year) %>% 
   mutate(row = row_number()) %>% 
-  filter(row = 1)
+  filter(row == 1)
 
 
 library(data.table)
