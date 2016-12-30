@@ -1,0 +1,39 @@
+
+# least square test
+
+library(dplyr)
+
+df <- faithful %>% as_data_frame
+
+
+X <- as.matrix(cbind(1, df$eruptions))
+y <- as.matrix(df$waiting)
+
+
+# https://en.wikipedia.org/wiki/Linear_least_squares_(mathematics)#Derivation_of_the_normal_equations
+
+# solve problem with matrix multiplication
+
+# solve = ^-1
+b <- solve(t(X) %*% X) %*% (t(X) %*% y)
+
+# check 
+model <- lm(y ~ X[, 2])
+
+# get all predictions
+X %*% b
+
+pred <- X %*% b
+e <- y - pred
+
+# sum of squared error
+t(e) %*% e
+
+# check 
+aov(y ~ X)
+
+
+
+
+
+
