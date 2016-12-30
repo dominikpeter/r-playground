@@ -3,8 +3,10 @@
 
 library(dplyr)
 
-df <- faithful %>% as_data_frame
+# linear regression 
+# -----------------------------------------------------------------
 
+df <- faithful %>% as_data_frame
 
 X <- as.matrix(cbind(1, df$eruptions))
 y <- as.matrix(df$waiting)
@@ -31,6 +33,28 @@ t(e) %*% e
 
 # check 
 aov(y ~ X)
+
+model
+
+# mutli variable
+# -----------------------------------------------------------------
+
+df <- mtcars %>% as_data_frame
+
+X <- as.matrix(cbind(Intercept = 1,
+                     df[, c(3, 4, 5, 6, 7)]))
+
+y <- as.matrix(df[, 1])
+
+
+b <- solve(t(X) %*% X) %*% (t(X) %*% y)
+
+pred <- X %*% b
+e <- y - pred
+
+# sum of squared error
+
+cbind(y, pred)
 
 
 
