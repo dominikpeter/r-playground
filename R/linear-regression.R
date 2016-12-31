@@ -61,8 +61,11 @@ cf <- function(b, X, y) {
    sum((y - X %*% b)^2)
 }
 
+?optim
 # optimize
-bmin <- optim(c(0,0,0,0,0,0), cf, X = X, y = y)
+bmin <- optim(c(0,0,0,0,0,0), cf, X = X, y = y, method = "BFGS")
+bmin
+lm(y~X[,-1])
 
 
 own_lm <- function(formula, data) {
@@ -79,7 +82,7 @@ own_lm <- function(formula, data) {
   } else {
     # initial b 
     b <- rnorm(ncol(X))
-    b <- optim(b, cf, X = X, y = y)
+    b <- optim(b, cf, X = X, y = y, method = "BFGS")
     b <- b$par
     names(b) <- colnames(X)
     m = "optim"
@@ -119,12 +122,18 @@ microbenchmark(own_lm(formula, data = mtcars),
                lm(formula, data = mtcars))
 
 ## own method is way slower than standard when using optim
-
+## why optim method not working?
 
 own_lm(formula, data = mtcars)
 lm(formula, data = mtcars)
 
 
+
+m <- bind_rows(rep(list(mtcars), 50))
+
+
+own_lm(formula, data = m)
+lm(formula, data = m)
 
 
 
