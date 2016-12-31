@@ -62,5 +62,70 @@ cf <- function(b, X, y) {
 }
 
 # optimize
-optim(c(0,0), cf, X = X, y = y)
+bmin <- optim(c(0,0,0,0,0,0), cf, X = X, y = y)
+
+
+own_lm <- function(formula, data) {
+  m <- match.call()
+  m[[1L]] <- quote(stats::model.frame)
+  frame <- eval(m)
+  y = as.matrix(frame[, 1])
+  X = as.matrix(cbind(1, frame[, -1]))
+
+  # get b
+  if (length(y) < 1000) {
+    b <- solve(t(X) %*% X) %*% (t(X) %*% y)
+    m = "linear-algebra"
+  } else {
+    # initial b 
+    b <- rnorm(ncol(X))
+    b <- optim(b, cf, X = X, y = y)
+    b <- b$par
+    names(b) <- colnames(X)
+    m = "optim"
+  }
+  prediction <- X %*% b
+  residuals <- y - prediction
+  SSE <- sum(residuals^2)
+  
+  structure(list(data = frame,
+                 X = X,
+                 y = y,
+                 b = b,
+                 prediction = prediction,
+                 residuals = residuals,
+                 SumSquaredError = SSE,
+                 method = m),
+            class = "own_lm")
+}
+
+
+print.own_lm <- function(model) {
+  cat("Linear Regression\n\n")
+  cat(paste("Method =", model[["method"]]),"\n\n")
+  
+  cat(model[["b"]])
+
+}
+
+
+
+formula <- mpg~disp+hp+qsec
+model <- own_lm(formula, data = mtcars)
+
+library(microbenchmark)
+
+microbenchmark(own_lm(formula, data = mtcars),
+               lm(formula, data = mtcars))
+
+## own method is way slower than standard when using optim
+
+
+own_lm(formula, data = mtcars)
+lm(formula, data = mtcars)
+
+
+
+
+
 
