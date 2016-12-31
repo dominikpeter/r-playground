@@ -53,11 +53,14 @@ pred <- X %*% b
 e <- y - pred
 
 # sum of squared error
-
 cbind(y, pred)
 
 
+# costfunction
+cf <- function(b, X, y) {
+   sum((y - X %*% b)^2)
+}
 
-
-
+# optimize
+optim(c(0,0), cf, X = X, y = y)
 
