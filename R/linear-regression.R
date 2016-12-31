@@ -71,7 +71,7 @@ lm(y~X[,-1])
 own_lm <- function(formula, data) {
   m <- match.call()
   m[[1L]] <- quote(stats::model.frame)
-  frame <- eval(m)
+  frame <- eval(m[1L:3L])
   y = as.matrix(frame[, 1])
   X = as.matrix(cbind(1, frame[, -1]))
 
